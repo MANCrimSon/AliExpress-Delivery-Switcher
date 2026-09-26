@@ -161,6 +161,7 @@
   // -------------------------------------------------------------
 
   const WIDGET_POS_KEY = 'ali_global_widget_pos_v2';
+  const WIDGET_MINIMIZED_KEY = 'ali_global_widget_minimized_v2';
 
   function getFlagEmoji(code) {
     if (!code || code.length !== 2) return '🌐';
@@ -199,7 +200,7 @@
   }
 
   function initSwitcherWidget() {
-    chrome.storage.sync.get(['alidata_v2', WIDGET_POS_KEY], (data) => {
+    chrome.storage.sync.get(['alidata_v2', WIDGET_POS_KEY, WIDGET_MINIMIZED_KEY], (data) => {
       let settings = null;
       try {
         if (data && data.alidata_v2) {
@@ -222,7 +223,8 @@
       if (settings.showOnPageWidget === false) return;
 
       const savedPos = data ? data[WIDGET_POS_KEY] : null;
-      renderWidget(settings, savedPos);
+      const isMinimized = !!(data && data[WIDGET_MINIMIZED_KEY]);
+      renderWidget(settings, savedPos, isMinimized);
     });
   }
 
@@ -243,7 +245,7 @@
     });
   } catch (e) {}
 
-  function renderWidget(settings, savedPos) {
+  function renderWidget(settings, savedPos, isMinimized) {
     if (document.getElementById('ali-quick-switch-root')) return;
 
     const hostEl = document.createElement('div');
@@ -501,6 +503,9 @@
 
     const container = document.createElement('div');
     container.className = 'quick-switch-container';
+    if (isMinimized) {
+      container.classList.add('minimized');
+    }
 
     // Position setup: Default is aligned under action column (right: 40px, bottom: 80px)
     if (savedPos && typeof savedPos.left === 'number' && typeof savedPos.top === 'number') {
@@ -546,6 +551,11 @@
     minimizeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       container.classList.add('minimized');
+      try {
+        if (chrome?.runtime?.id) {
+          chrome.storage.sync.set({ [WIDGET_MINIMIZED_KEY]: true });
+        }
+      } catch (err) {}
     });
     header.appendChild(minimizeBtn);
     container.appendChild(header);
@@ -699,6 +709,11 @@
       }
       if (container.classList.contains('minimized')) {
         container.classList.remove('minimized');
+        try {
+          if (chrome?.runtime?.id) {
+            chrome.storage.sync.set({ [WIDGET_MINIMIZED_KEY]: false });
+          }
+        } catch (err) {}
       }
     });
 
