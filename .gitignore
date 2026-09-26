@@ -8,6 +8,8 @@ CHAT_CONTEXT.md
 # Local build and test files
 scratch/
 *.zip
+*.crx
+*.pem
 build.ps1
 
 # OS artifacts

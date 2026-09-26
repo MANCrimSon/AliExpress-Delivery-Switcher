@@ -336,6 +336,9 @@
         padding-bottom: 4px;
         border-bottom: 1px solid #f0f0f2;
         cursor: grab;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
       .widget-header:active {
         cursor: grabbing;
@@ -395,6 +398,9 @@
         flex-shrink: 0;
         cursor: grab;
         color: #6b7280;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
       .tier-label svg {
         display: block;
@@ -475,6 +481,9 @@
         font-size: 11.5px;
         font-weight: 700;
         color: #1a1a2e;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
       .quick-switch-container.minimized .minimized-pill {
         display: flex;
@@ -681,24 +690,49 @@
     `;
     container.appendChild(minPill);
 
+    let hasDragged = false;
+
     container.addEventListener('click', () => {
+      if (hasDragged) {
+        hasDragged = false;
+        return;
+      }
       if (container.classList.contains('minimized')) {
         container.classList.remove('minimized');
       }
     });
 
-    // 6. Drag & Drop Handling
+    // 6. Drag & Drop Handling (Unified Touch & Mouse via Pointer and Touch events)
     let isDragging = false;
     let dragStartX = 0;
     let dragStartY = 0;
     let elemStartX = 0;
     let elemStartY = 0;
+    let activePointerId = null;
+
+    function getCoords(e) {
+      if (e.touches && e.touches.length > 0) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
 
     function startDrag(e) {
       if (e.target && (e.target.closest('.tier-btn') || e.target.closest('.minimize-btn'))) return;
-      e.preventDefault();
-      e.stopPropagation();
+      if (isDragging) return;
+
+      const coords = getCoords(e);
+      if (coords.x === undefined || coords.y === undefined) return;
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
       isDragging = true;
+      hasDragged = false;
       container.classList.add('dragging');
 
       const rect = container.getBoundingClientRect();
@@ -708,20 +742,43 @@
       container.style.left = `${rect.left}px`;
       container.style.top = `${rect.top}px`;
 
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
+      dragStartX = coords.x;
+      dragStartY = coords.y;
       elemStartX = rect.left;
       elemStartY = rect.top;
 
-      window.addEventListener('mousemove', onMouseMove);
+      if (e.pointerId !== undefined && typeof e.target.setPointerCapture === 'function') {
+        activePointerId = e.pointerId;
+        try {
+          e.target.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+
+      window.addEventListener('pointermove', onMove, { passive: false });
+      window.addEventListener('pointerup', stopDrag);
+      window.addEventListener('pointercancel', stopDrag);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', stopDrag);
+      window.addEventListener('touchcancel', stopDrag);
+      window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', stopDrag);
-      document.addEventListener('mouseup', stopDrag);
     }
 
-    function onMouseMove(e) {
+    function onMove(e) {
       if (!isDragging) return;
-      const deltaX = e.clientX - dragStartX;
-      const deltaY = e.clientY - dragStartY;
+      const coords = getCoords(e);
+      if (coords.x === undefined || coords.y === undefined) return;
+
+      const deltaX = coords.x - dragStartX;
+      const deltaY = coords.y - dragStartY;
+
+      if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+        hasDragged = true;
+      }
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
 
       let newLeft = elemStartX + deltaX;
       let newTop = elemStartY + deltaY;
@@ -735,13 +792,26 @@
       container.style.top = `${newTop}px`;
     }
 
-    function stopDrag() {
+    function stopDrag(e) {
       if (!isDragging) return;
       isDragging = false;
       container.classList.remove('dragging');
-      window.removeEventListener('mousemove', onMouseMove);
+
+      if (activePointerId !== null && e && e.target && typeof e.target.releasePointerCapture === 'function') {
+        try {
+          e.target.releasePointerCapture(activePointerId);
+        } catch (err) {}
+        activePointerId = null;
+      }
+
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', stopDrag);
+      window.removeEventListener('pointercancel', stopDrag);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', stopDrag);
+      window.removeEventListener('touchcancel', stopDrag);
+      window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', stopDrag);
-      document.removeEventListener('mouseup', stopDrag);
 
       try {
         if (!chrome?.runtime?.id) return;
@@ -755,11 +825,12 @@
       }
     }
 
-    header.addEventListener('mousedown', startDrag);
-    t1Label.addEventListener('mousedown', startDrag);
-    t2Label.addEventListener('mousedown', startDrag);
-    t3Label.addEventListener('mousedown', startDrag);
-    minPill.addEventListener('mousedown', startDrag);
+    const dragHandles = [header, t1Label, t2Label, t3Label, minPill];
+    dragHandles.forEach((handle) => {
+      handle.addEventListener('pointerdown', startDrag);
+      handle.addEventListener('touchstart', startDrag, { passive: false });
+      handle.addEventListener('mousedown', startDrag);
+    });
 
     shadow.appendChild(style);
     shadow.appendChild(container);
