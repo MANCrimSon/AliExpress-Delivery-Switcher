@@ -121,9 +121,20 @@ class PopupController {
 
   #init() {
     this.#cacheElements();
+    this.#displayExtensionVersion();
     this.#populateDropdowns();
     this.#loadSettings();
     this.#bindEvents();
+  }
+
+  #displayExtensionVersion() {
+    try {
+      const manifest = chrome.runtime?.getManifest?.();
+      if (manifest?.version && this.#els.extVersion) {
+        this.#els.extVersion.textContent = `v${manifest.version}`;
+        this.#els.extVersion.title = `Version ${manifest.version}`;
+      }
+    } catch (e) {}
   }
 
   #cacheElements() {
@@ -146,6 +157,7 @@ class PopupController {
       btnApply:             document.getElementById('btn_apply'),
       message:              document.getElementById('message'),
       github:               document.getElementById('github'),
+      extVersion:           document.getElementById('ext_version'),
       uiLangBtn:            document.getElementById('ui_lang_btn'),
       uiLangLabel:          document.getElementById('ui_lang_label'),
       uiHeaderSub:          document.getElementById('ui_header_sub'),
@@ -796,6 +808,15 @@ class PopupController {
       e.preventDefault();
       chrome.tabs.create({ url: 'https://github.com/MANCrimSon/AliExpress-Delivery-Switcher' });
     });
+
+    // Version badge in footer opens latest release
+    if (this.#els.extVersion) {
+      this.#els.extVersion.style.cursor = 'pointer';
+      this.#els.extVersion.addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.tabs.create({ url: 'https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest' });
+      });
+    }
   }
 
   #onSearchInput(input, populateFn) {
