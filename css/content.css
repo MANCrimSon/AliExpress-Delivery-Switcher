@@ -1,0 +1,40 @@
+/**
+ * AliExpress Global Switcher - Content Script CSS
+ * Injected declaratively by Chrome at document_start.
+ * Completely suppresses #gdpr-new-container and any cookie/consent dialogs.
+ */
+
+#gdpr-new-container,
+div#gdpr-new-container,
+.gdpr-new-container,
+.gdpr-new-mask,
+.ui-mask,
+.ui-window-mask,
+#onetrust-banner-sdk,
+#onetrust-consent-sdk,
+.onetrust-pc-dark-filter,
+#onetrust-style,
+.cookie-banner,
+.gdpr-dialog,
+.gdpr-wrap,
+[class*="cookie-banner"],
+[class*="cookie-notice"],
+[class*="gdpr-"],
+[id*="cookie-banner"],
+[id*="onetrust"],
+[id*="gdpr-new-container"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+  z-index: -2147483648 !important;
+}
+
+html, body {
+  overflow: auto !important;
+  position: static !important;
+}

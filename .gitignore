@@ -1,0 +1,15 @@
+# AI assistant and development session files
+STATE.md
+GEMINI.md
+AGENTS.md
+.clinerules
+CHAT_CONTEXT.md
+
+# Local build and test files
+scratch/
+*.zip
+build.ps1
+
+# OS artifacts
+.DS_Store
+Thumbs.db

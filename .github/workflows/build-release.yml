@@ -1,0 +1,73 @@
+name: Build & Package Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Validate and Package Extension
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify JavaScript syntax
+        run: |
+          node -c js/config.js js/background.js js/content.js js/app.js
+          echo "All JavaScript files passed syntax verification."
+
+      - name: Get version from manifest.json
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./manifest.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Building package for version $VERSION"
+
+      - name: Build clean ZIP package
+        run: |
+          ZIP_NAME="aliexpress-delivery-switcher-v${VERSION}.zip"
+          zip -r "$ZIP_NAME" \
+            manifest.json \
+            popup.html \
+            LICENSE \
+            README.md \
+            screenshot.png \
+            icons \
+            css \
+            js
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          ls -lh "$ZIP_NAME"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aliexpress-delivery-switcher-v${{ env.VERSION }}
+          path: ${{ env.ZIP_NAME }}
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP_NAME }}
+          name: AliExpress Delivery Switcher v${{ env.VERSION }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AliExpress Delivery Switcher</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+
+    <header class="popup-header">
+      <div class="header-left">
+        <div class="header-icon">
+          <img src="./icons/icon48.png" width="28" height="28" alt="Logo" class="header-logo" />
+        </div>
+        <div class="header-text">
+          <span class="header-title">AliExpress Delivery Switcher</span>
+          <span id="ui_header_sub" class="header-sub">Обрані параметри та доставка</span>
+        </div>
+      </div>
+      <button type="button" id="ui_lang_btn" class="header-lang-btn" title="Змінити мову інтерфейсу (UA / EN / RU)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> <span id="ui_lang_label">UA</span>
+      </button>
+    </header>
+
+    <main class="popup-body">
+
+      <!-- Country Section -->
+      <div class="field-group">
+        <div class="field-header">
+          <label class="field-label" for="countries">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            <span id="ui_label_country">Доставка (Ship To)</span>
+          </label>
+          <div class="search-box">
+            <input type="text" id="search_country" class="search-input" placeholder="Поиск..." autocomplete="off" />
+            <button type="button" class="search-clear" data-target="search_country" title="Очистить">&times;</button>
+          </div>
+        </div>
+        <div class="select-with-star">
+          <select class="field-select" id="countries" autocomplete="off"></select>
+          <button type="button" id="star_country" class="star-btn" title="Добавить/убрать из избранного">
+            <svg class="star-icon" width="16" height="16" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="fav-section">
+          <span id="ui_fav_title_country" class="fav-title">⭐ Избранное:</span>
+          <div id="fav_countries_chips" class="fav-chips"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Currency Section -->
+      <div class="field-group">
+        <div class="field-header">
+          <label class="field-label" for="currencies">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span id="ui_label_currency">Валюта (Currency)</span>
+          </label>
+          <div class="search-box">
+            <input type="text" id="search_currency" class="search-input" placeholder="Поиск..." autocomplete="off" />
+            <button type="button" class="search-clear" data-target="search_currency" title="Очистить">&times;</button>
+          </div>
+        </div>
+        <div class="select-with-star">
+          <select class="field-select" id="currencies" autocomplete="off"></select>
+          <button type="button" id="star_currency" class="star-btn" title="Добавить/убрать из избранного">
+            <svg class="star-icon" width="16" height="16" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="fav-section">
+          <span id="ui_fav_title_currency" class="fav-title">⭐ Избранное:</span>
+          <div id="fav_currencies_chips" class="fav-chips"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Language Section -->
+      <div class="field-group">
+        <div class="field-header">
+          <label class="field-label" for="locales">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            <span id="ui_label_locale">Язык сайта (Language)</span>
+          </label>
+          <div class="search-box">
+            <input type="text" id="search_locale" class="search-input" placeholder="Поиск..." autocomplete="off" />
+            <button type="button" class="search-clear" data-target="search_locale" title="Очистить">&times;</button>
+          </div>
+        </div>
+        <div class="select-with-star">
+          <select class="field-select" id="locales" autocomplete="off"></select>
+          <button type="button" id="star_locale" class="star-btn" title="Добавить/убрать из избранного">
+            <svg class="star-icon" width="16" height="16" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="fav-section">
+          <span id="ui_fav_title_locale" class="fav-title">⭐ Избранное:</span>
+          <div id="fav_locales_chips" class="fav-chips"></div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="actions-group">
+        <button type="button" id="btn_apply" class="action-btn primary" title="Применить выбранные параметры к странице">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="ui_btn_apply">Применить выбранное к сайту</span>
+        </button>
+      </div>
+      <span id="ui_help_hint" class="help-hint">Отмеченные звёздочкой ⭐ страны, валюты и языки выводятся в независимый 3-уровневый виджет на страницах AliExpress.</span>
+
+      <div class="divider"></div>
+
+      <!-- Settings toggles: 2-column compact grid -->
+      <div class="settings-grid">
+        <div class="setting-item">
+          <div class="setting-info">
+            <span id="ui_setting_widget_title" class="setting-label">Виджет</span>
+            <span id="ui_setting_widget_desc" class="setting-desc">3 уровня на сайте</span>
+          </div>
+          <label class="toggle sm">
+            <input type="checkbox" id="show_widget" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <span id="ui_setting_global_title" class="setting-label">Анти-RU</span>
+            <span id="ui_setting_global_desc" class="setting-desc">Защита от .ru</span>
+          </div>
+          <label class="toggle sm">
+            <input type="checkbox" id="global_mode" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="popup-footer">
+      <span id="message" class="footer-message"></span>
+      <a id="github" href="#" class="footer-link" title="GitHub" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
