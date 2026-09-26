@@ -48,7 +48,6 @@ jobs:
             popup.html \
             LICENSE \
             README.md \
-            screenshot.png \
             icons \
             css \
             js
