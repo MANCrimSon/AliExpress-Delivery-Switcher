@@ -2,9 +2,9 @@
 
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-success?style=flat-square)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Chromium Supported](https://img.shields.io/badge/Chromium-Chrome%20%7C%20Brave%20%7C%20Edge%20%7C%20Opera-blue?style=flat-square&logo=googlechrome&logoColor=white)](https://www.chromium.org)
-[![Build & Package](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/actions/workflows/build-release.yml/badge.svg)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/actions)
+[![Latest Release](https://img.shields.io/github/v/release/MANCrimSon/AliExpress-Delivery-Switcher?style=flat-square&color=orange)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/MANCrimSon/AliExpress-Delivery-Switcher/total?style=flat-square&color=green)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-red?style=flat-square)](manifest.json)
 
 > **AliExpress Delivery Switcher** is an advanced Manifest V3 browser extension for **Google Chrome and all Chromium-based browsers** (Brave, Microsoft Edge, Opera, Vivaldi, Arc, etc.). It delivers instant 1-click switching of delivery country, currency, and language directly on AliExpress pages, guarantees protection against forced `.ru` redirects, blocks annoying cookie consent banners, and saves your favorite shopping presets.
 
@@ -56,7 +56,7 @@
 ### 🔹 Варіант B: Ручне встановлення через режим розробника (Миттєво та безкоштовно)
 
 1. **Завантажте розширення**:
-   - Завантажте свіжий архів [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (або візьміть готовий пакет із розділу [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+   - Перейдіть у розділ **[Останній реліз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)** та завантажте готовий архів `aliexpress-delivery-switcher-v*.zip` (у блоці Assets).
    - Розархівуйте ZIP у будь-яку зручну папку на комп'ютері (наприклад, у `Документи`).
 2. **Відкрийте сторінку керування розширеннями у вашому браузері**:
    - Введіть в адресному рядку `chrome://extensions` та натисніть <kbd>Enter</kbd> (універсально для всіх Chromium-браузерів: Chrome, Edge, Brave, Opera тощо автоматично відкриють потрібну сторінку).
@@ -71,7 +71,7 @@
 ---
 
 ### 🔄 Як оновити розширення:
-1. Завантажте новий архів [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (або з [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+1. Завантажте новий архів розширення з розділу **[Останній реліз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Розархівуйте його **із заміною файлів** у ту саму папку, де встановлено розширення.
 3. Відкрийте сторінку розширень у браузері (`chrome://extensions`) і натисніть кнопку **Оновити** (іконка 🔄 у картці розширення).
 </details>
@@ -90,7 +90,7 @@
 ### 🔹 Option B: Manual Installation via Developer Mode (Free & Instant for all Chromium browsers)
 
 1. **Download the project**:
-   - Download the latest [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (or get packaged archives from [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+   - Go to the **[Latest Release](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)** and download the ready-to-use `aliexpress-delivery-switcher-v*.zip` (under Assets).
    - Extract the ZIP archive anywhere on your PC (e.g. into `Documents` or `Desktop`).
    - *(Alternative for developers)*:
      ```bash
@@ -109,7 +109,7 @@
 ---
 
 ### 🔄 How to Update the Extension:
-1. Download the latest [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (or from [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+1. Download the newest ZIP package from the **[Latest Release](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Extract it **overwriting existing files** in your extension folder.
 3. Go to `chrome://extensions` and click the **Reload** icon (🔄) on the AliExpress Delivery Switcher card.
 </details>
@@ -128,7 +128,7 @@
 ### 🔹 Вариант B: Ручная установка через режим разработчика (Мгновенно и бесплатно)
 
 1. **Скачайте расширение**:
-   - Скачайте свежий архив [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (или возьмите готовый пакет из раздела [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+   - Перейдите в раздел **[Последний релиз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)** и скачайте готовый архив `aliexpress-delivery-switcher-v*.zip` (в блоке Assets).
    - Распакуйте скачанный ZIP-архив в любую удобную папку на компьютере (например, в `Документы`).
 2. **Откройте страницу управления расширениями в вашем браузере**:
    - Вставьте в адресную строку `chrome://extensions` и нажмите <kbd>Enter</kbd> (универсально для всех Chromium-браузеров: Chrome, Edge, Brave, Opera и др. автоматически откроют нужный раздел).
@@ -143,7 +143,7 @@
 ---
 
 ### 🔄 Как обновить расширение:
-1. Скачайте свежий [ZIP](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/archive/refs/heads/main.zip) (или из [Releases](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases)).
+1. Скачайте свежий архив расширения из раздела **[Последний релиз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Распакуйте архив **с заменой файлов** в ту же папку, куда было установлено расширение.
 3. Откройте в браузере `chrome://extensions` и нажмите кнопку **Обновить** (иконка 🔄 на карточке расширения).
 </details>
