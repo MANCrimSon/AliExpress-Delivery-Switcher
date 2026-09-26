@@ -73,7 +73,7 @@
 ### 🔄 Як оновити розширення:
 1. Завантажте новий архів розширення з розділу **[Останній реліз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Розархівуйте його **із заміною файлів** у ту саму папку, де встановлено розширення.
-3. Відкрийте сторінку розширень у браузері (`chrome://extensions`) і натисніть кнопку **Оновити** (іконка 🔄 у картці розширення).
+3. Відкрийте сторінку розширень у браузері (`chrome://extensions`) і натисніть кнопку **Перезавантажити** / **Reload** на картці розширення (або кнопку **🔄 Оновити** у верхній панелі).
 </details>
 
 <br>
@@ -111,7 +111,7 @@
 ### 🔄 How to Update the Extension:
 1. Download the newest ZIP package from the **[Latest Release](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Extract it **overwriting existing files** in your extension folder.
-3. Go to `chrome://extensions` and click the **Reload** icon (🔄) on the AliExpress Delivery Switcher card.
+3. Go to `chrome://extensions` and click **Reload** (🔄) on the extension card (or the top toolbar **Update** button).
 </details>
 
 <br>
@@ -145,7 +145,7 @@
 ### 🔄 Как обновить расширение:
 1. Скачайте свежий архив расширения из раздела **[Последний релиз (Latest Release)](https://github.com/MANCrimSon/AliExpress-Delivery-Switcher/releases/latest)**.
 2. Распакуйте архив **с заменой файлов** в ту же папку, куда было установлено расширение.
-3. Откройте в браузере `chrome://extensions` и нажмите кнопку **Обновить** (иконка 🔄 на карточке расширения).
+3. Откройте в браузере `chrome://extensions` и нажмите кнопку **Перезагрузить** на карточке расширения (либо кнопку **🔄 Обновить** в верхней панели браузера).
 </details>
 
 ---
