@@ -11,6 +11,33 @@
   if (window.__aliQuickSwitcherInjected) return;
   window.__aliQuickSwitcherInjected = true;
 
+  // Security & Payment Isolation:
+  // Strictly exempt checkout, payment, trade order confirmations, and banking flows.
+  // Never inject widgets, manipulate cookies, or alter DOM/styles during sensitive financial flows.
+  function isSensitivePage() {
+    try {
+      const host = location.hostname.toLowerCase();
+      const path = location.pathname.toLowerCase();
+      return (
+        host.startsWith('checkout.') ||
+        host.startsWith('trade.') ||
+        host.startsWith('pay.') ||
+        host.startsWith('payment.') ||
+        host.startsWith('cashier.') ||
+        host.includes('alipay.') ||
+        path.includes('/trade') ||
+        path.includes('/checkout') ||
+        path.includes('/payment') ||
+        path.includes('/order') ||
+        path.includes('/pay/')
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  if (isSensitivePage()) return;
+
   // Instant client-side escape if landed on aliexpress.ru (e.g. via affiliate ali.click links)
   // Respects the "Global redirect" toggle in settings
   if (location.hostname.endsWith('aliexpress.ru')) {
@@ -53,8 +80,6 @@
       div#gdpr-new-container,
       .gdpr-new-container,
       .gdpr-new-mask,
-      .ui-mask,
-      .ui-window-mask,
       #onetrust-banner-sdk,
       #onetrust-consent-sdk,
       .onetrust-pc-dark-filter,
@@ -100,8 +125,8 @@
       try { gdprContainer.remove(); } catch (e) {}
     }
 
-    // 2. Remove any modal backdrop masks
-    const masks = document.querySelectorAll('.gdpr-new-mask, .ui-mask, .ui-window-mask');
+    // 2. Remove only GDPR-specific modal backdrop masks (never touch generic .ui-mask)
+    const masks = document.querySelectorAll('.gdpr-new-mask, #gdpr-new-container .ui-mask');
     masks.forEach((m) => {
       try { m.remove(); } catch (e) {}
     });

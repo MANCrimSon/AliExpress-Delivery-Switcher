@@ -1,7 +1,7 @@
 {
   "name": "AliExpress Delivery Switcher",
   "manifest_version": 3,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "1-click delivery country, currency & language switcher for AliExpress with anti-RU redirect protection.",
   "permissions": [
     "tabs",
@@ -42,6 +42,14 @@
         "*://aliexpress.ru/*",
         "*://*.aliexpress.us/*",
         "*://aliexpress.us/*"
+      ],
+      "exclude_matches": [
+        "*://checkout.aliexpress.com/*",
+        "*://trade.aliexpress.com/*",
+        "*://pay.aliexpress.com/*",
+        "*://payment.aliexpress.com/*",
+        "*://cashier.aliexpress.com/*",
+        "*://*.alipay.com/*"
       ],
       "css": [
         "css/content.css"

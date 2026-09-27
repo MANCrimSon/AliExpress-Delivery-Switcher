@@ -77,11 +77,40 @@ class AliExpressSwitcher {
    * Check whether a URL belongs to any AliExpress domain
    * @param {string} url
    * @returns {boolean}
-   */
+    */
   #isAliExpress(url) {
     try {
       const host = new URL(url).hostname;
       return ALIEXPRESS_DOMAINS.tlds.some((tld) => host.endsWith(tld));
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Check whether a URL is a sensitive checkout, payment, trade, or banking endpoint.
+   * Such URLs must never be interrupted, redirected, or reloaded automatically.
+   * @param {string} url
+   * @returns {boolean}
+   */
+  #isSensitiveUrl(url) {
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.toLowerCase();
+      const path = parsed.pathname.toLowerCase();
+      return (
+        host.startsWith('checkout.') ||
+        host.startsWith('trade.') ||
+        host.startsWith('pay.') ||
+        host.startsWith('payment.') ||
+        host.startsWith('cashier.') ||
+        host.includes('alipay.') ||
+        path.includes('/trade') ||
+        path.includes('/checkout') ||
+        path.includes('/payment') ||
+        path.includes('/order') ||
+        path.includes('/pay/')
+      );
     } catch {
       return false;
     }
@@ -95,6 +124,11 @@ class AliExpressSwitcher {
    */
   #needsRedirect(url) {
     try {
+      // Never intercept sensitive checkout or payment flows
+      if (this.#isSensitiveUrl(url)) {
+        return false;
+      }
+
       const parsed = new URL(url);
       const host = parsed.hostname;
 
@@ -242,6 +276,30 @@ class AliExpressSwitcher {
   }
 
   /**
+   * Safely reloads a tab only if it is not on a sensitive checkout/payment/trade page
+   * @param {number|null} tabId
+   */
+  #safelyReloadTab(tabId) {
+    if (!tabId) return;
+    chrome.tabs.get(tabId, (tab) => {
+      if (tab?.url && this.#isAliExpress(tab.url) && !this.#isSensitiveUrl(tab.url)) {
+        chrome.tabs.reload(tabId);
+      }
+    });
+  }
+
+  /**
+   * Safely reloads the active tab only if it is not on a sensitive checkout/payment/trade page
+   */
+  #safelyReloadActiveTab() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id && tabs[0]?.url && this.#isAliExpress(tabs[0].url) && !this.#isSensitiveUrl(tabs[0].url)) {
+        chrome.tabs.reload(tabs[0].id);
+      }
+    });
+  }
+
+  /**
    * Quick-switch delivery country, apply cookies immediately and refresh target tab.
    * @param {string} region - 'ua', 'pl', or 'de'
    * @param {number|null} targetTabId - optional tab ID to reload
@@ -266,15 +324,11 @@ class AliExpressSwitcher {
     // Fire background server cookie sync without waiting/blocking
     this.#setCookies(settings).catch(() => {});
 
-    // Instantly refresh current or specified tab
+    // Instantly refresh current or specified tab (ignoring sensitive checkout/payment tabs)
     if (targetTabId) {
-      chrome.tabs.reload(targetTabId);
+      this.#safelyReloadTab(targetTabId);
     } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id && this.#isAliExpress(tabs[0].url || '')) {
-          chrome.tabs.reload(tabs[0].id);
-        }
-      });
+      this.#safelyReloadActiveTab();
     }
   }
 
@@ -303,13 +357,9 @@ class AliExpressSwitcher {
     this.#setCookies(settings).catch(() => {});
 
     if (targetTabId) {
-      chrome.tabs.reload(targetTabId);
+      this.#safelyReloadTab(targetTabId);
     } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id && this.#isAliExpress(tabs[0].url || '')) {
-          chrome.tabs.reload(tabs[0].id);
-        }
-      });
+      this.#safelyReloadActiveTab();
     }
   }
 
@@ -338,8 +388,8 @@ class AliExpressSwitcher {
     this.#setCookies(settings).catch(() => {});
 
     const updateOrReload = (tab) => {
-      if (!tab?.id) return;
-      if (this.#needsRedirect(tab.url || '')) {
+      if (!tab?.id || !tab?.url || this.#isSensitiveUrl(tab.url)) return;
+      if (this.#needsRedirect(tab.url)) {
         const targetUrl = this.#toPreferredUrl(tab.url);
         chrome.tabs.update(tab.id, { url: targetUrl }).catch(() => {});
       } else {
@@ -353,7 +403,7 @@ class AliExpressSwitcher {
       });
     } else {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id && this.#isAliExpress(tabs[0].url || '')) {
+        if (tabs[0]) {
           updateOrReload(tabs[0]);
         }
       });
@@ -383,13 +433,9 @@ class AliExpressSwitcher {
     this.#setCookies(settings).catch(() => {});
 
     if (targetTabId) {
-      chrome.tabs.reload(targetTabId);
+      this.#safelyReloadTab(targetTabId);
     } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs[0]?.id && this.#isAliExpress(tabs[0].url || '')) {
-          chrome.tabs.reload(tabs[0].id);
-        }
-      });
+      this.#safelyReloadActiveTab();
     }
   }
 
@@ -580,6 +626,7 @@ class AliExpressSwitcher {
    * changed settings in the popup (applySettings flag)
    */
   async #onPageComplete(tabId, tab) {
+    if (!tab?.url || this.#isSensitiveUrl(tab.url)) return;
     const settings = await this.#load();
     if (!settings.applySettings) return;
 
