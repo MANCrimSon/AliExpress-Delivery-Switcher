@@ -200,22 +200,19 @@ class AliExpressSwitcher {
    */
   async #setDirectCookies(settings) {
     const cookieValue = `site=${settings.site || 'glo'}&c_tp=${settings.currency || 'EUR'}&region=${(settings.region || 'UA').toUpperCase()}&b_locale=${settings.locale || 'ru_RU'}`;
-    const domains = ['.aliexpress.com', 'www.aliexpress.com'];
 
-    for (const domain of domains) {
-      try {
-        await chrome.cookies.set({
-          url: `https://www.aliexpress.com`,
-          domain: domain,
-          name: 'aep_usuc_f',
-          value: cookieValue,
-          path: '/',
-          secure: true,
-          sameSite: 'no_restriction'
-        });
-      } catch (err) {
-        console.warn(AliExpressSwitcher.TAG, 'Direct cookie set warning:', err);
-      }
+    try {
+      await chrome.cookies.set({
+        url: 'https://www.aliexpress.com',
+        domain: '.aliexpress.com',
+        name: 'aep_usuc_f',
+        value: cookieValue,
+        path: '/',
+        secure: true,
+        sameSite: 'no_restriction'
+      });
+    } catch (err) {
+      console.warn(AliExpressSwitcher.TAG, 'Direct cookie set warning:', err);
     }
   }
 
@@ -231,12 +228,23 @@ class AliExpressSwitcher {
     await Promise.allSettled(requests);
   }
 
-  /** Remove region/currency cookies so fresh values take effect */
+  /**
+   * Thoroughly clear all aep_usuc_f cookies across all domains to prevent stale ghost cookies
+   */
   async #clearCookies() {
-    const removals = ALIEXPRESS_DOMAINS.cookiesToClear.map((c) =>
-      chrome.cookies.remove(c).catch(() => {})
-    );
-    await Promise.allSettled(removals);
+    try {
+      const allCookies = await chrome.cookies.getAll({ name: 'aep_usuc_f' });
+      for (const c of allCookies) {
+        if (c.domain.includes('aliexpress')) {
+          const proto = c.secure ? 'https:' : 'http:';
+          const domain = c.domain.startsWith('.') ? c.domain.slice(1) : c.domain;
+          const url = `${proto}//${domain}${c.path}`;
+          await chrome.cookies.remove({ url, name: c.name }).catch(() => {});
+        }
+      }
+    } catch (err) {
+      console.warn(AliExpressSwitcher.TAG, 'Cookie cleanup warning:', err);
+    }
   }
 
   /**
