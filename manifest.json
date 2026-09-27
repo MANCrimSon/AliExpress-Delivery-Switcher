@@ -49,7 +49,11 @@
         "*://pay.aliexpress.com/*",
         "*://payment.aliexpress.com/*",
         "*://cashier.aliexpress.com/*",
-        "*://*.alipay.com/*"
+        "*://*.alipay.com/*",
+        "*://*.aliexpress.com/p/trade/*",
+        "*://*.aliexpress.com/p/checkout/*",
+        "*://*.aliexpress.com/p/second-payment/*",
+        "*://*.aliexpress.com/p/order/*"
       ],
       "css": [
         "css/content.css"
