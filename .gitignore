@@ -11,6 +11,7 @@ scratch/
 *.crx
 *.pem
 build.ps1
+*.har
 
 # OS artifacts
 .DS_Store
