@@ -218,6 +218,7 @@ class AliExpressSwitcher {
 
   /**
    * Set AliExpress cookies on all relevant domains.
+   * Also synchronizes account preference locale with login.aliexpress.com for native parity.
    * @param {object} settings
    */
   async #setCookies(settings) {
@@ -225,6 +226,13 @@ class AliExpressSwitcher {
     const requests = ALIEXPRESS_DOMAINS.cookieHosts.map((host) =>
       fetch(this.#buildCookieUrl(host, settings), opts).catch(() => {})
     );
+
+    // Native parity: sync account locale preference on login.aliexpress.com
+    const locale = settings.locale || 'ru_RU';
+    requests.push(
+      fetch(`https://login.aliexpress.com/preference.htm?locale=${encodeURIComponent(locale)}`, opts).catch(() => {})
+    );
+
     await Promise.allSettled(requests);
   }
 
